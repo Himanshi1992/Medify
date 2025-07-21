@@ -1,23 +1,16 @@
-import logo from './logo.svg';
 import './App.css';
+import Footer from "../src/components/Footer";
+import DownloadApp from "../src/components/Section/DownloadApp";
+import { Outlet } from "react-router-dom";
+import { CssBaseline } from "@mui/material";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <CssBaseline />
+      <Outlet />
+      <DownloadApp />
+      <Footer />
     </div>
   );
 }
