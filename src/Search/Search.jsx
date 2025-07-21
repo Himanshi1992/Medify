@@ -11,10 +11,10 @@ import NavBar from "../components/NavBar";
 import AutohideSnackbar from "../components/AutohideSnackbar";
 
 function Search() {
-  const [seachParams, setSearchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [hospitals, setHospitals] = useState([]);
-  const [state, setState] = useState(seachParams.get("state"));
-  const [city, setCity] = useState(seachParams.get("city"));
+  const [state, setState] = useState(searchParams.get("state"));
+  const [city, setCity] = useState(searchParams.get("city"));
   const availableSlots = {
     morning: ["11:30 AM"],
     afternoon: ["12:00 PM", "12:30 PM", "01:30 PM", "02:00 PM", "02:30 PM"],
@@ -24,7 +24,7 @@ function Search() {
   const [bookingDetails, setBookingDetails] = useState({});
   const [showBookingSuccess, setShowBookingSuccess] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
- 
+
   useEffect(() => {
     const getHospitals = async () => {
       setHospitals([]);
@@ -34,6 +34,7 @@ function Search() {
           `https://meddata-backend.onrender.com/data?state=${state}&city=${city}`
         );
         setHospitals(data.data);
+        console.log("Hospitals Loaded:", data.data); // Debug log
         setIsLoading(false);
       } catch (err) {
         console.log(err);
@@ -47,9 +48,9 @@ function Search() {
   }, [state, city]);
 
   useEffect(() => {
-    setState(seachParams.get("state"));
-    setCity(seachParams.get("city"));
-  }, [seachParams]);
+    setState(searchParams.get("state"));
+    setCity(searchParams.get("city"));
+  }, [searchParams]);
 
   const handleBookingModal = (details) => {
     setBookingDetails(details);
@@ -122,9 +123,9 @@ function Search() {
               mr="24px"
             >
               {hospitals.length > 0 &&
-                hospitals.map((hospital) => (
+                hospitals.map((hospital, index) => (
                   <HospitalCard
-                    key={hospital["Hospital Name"]}
+                    key={hospital["Hospital Name"] || index}
                     details={hospital}
                     availableSlots={availableSlots}
                     handleBooking={handleBookingModal}
@@ -164,4 +165,5 @@ function Search() {
     </>
   );
 }
+
 export default Search;

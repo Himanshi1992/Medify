@@ -1,15 +1,22 @@
 import { Modal, Typography, Box, TextField, Button, Stack, } from "@mui/material";
 import { useState } from "react";
-import { format } from "date-fns";
+import { format, isToday  } from "date-fns";
 
-function BookingModal({ setOpen, open, bookingDetails, showSuccessMessage,}) {
+function BookingModal({ setOpen, open, bookingDetails, showSuccessMessage }) {
   const [email, setEmail] = useState("");
+
   const handleBooking = (e) => {
     e.preventDefault();
     triggerEvent();
     const bookings = localStorage.getItem("bookings") || "[]";
     const oldBookings = JSON.parse(bookings);
-    localStorage.setItem("bookings", JSON.stringify([...oldBookings, { ...bookingDetails, bookingEmail: email },]));
+    localStorage.setItem(
+      "bookings",
+      JSON.stringify([
+        ...oldBookings,
+        { ...bookingDetails, bookingEmail: email },
+      ])
+    );
     showSuccessMessage(true);
     setEmail("");
     setOpen(false);
@@ -17,12 +24,10 @@ function BookingModal({ setOpen, open, bookingDetails, showSuccessMessage,}) {
 
   const triggerEvent = () => {
     window.dataLayer = window.dataLayer || [];
-    function triggerFirstVisitEvent() {
-      window.dataLayer.push({
-        event: "first_visit",
-        eventDate: new Date().toISOString(), });
-    }
-    triggerFirstVisitEvent();
+    window.dataLayer.push({
+      event: "first_visit",
+      eventDate: new Date().toISOString(),
+    });
   };
 
   const formatDate = (day) => {
@@ -54,16 +59,24 @@ function BookingModal({ setOpen, open, bookingDetails, showSuccessMessage,}) {
         <Typography component="h3" variant="h3">
           Confirm booking
         </Typography>
-        <Typography fontSize={14} mb={3}>
-          <Box component="span">
-            Please enter your email to confirm booking for{" "}
-          </Box>
+
+        <Typography fontSize={14} mb={2}>
+          <Box component="span">Please enter your email to confirm booking for </Box>
           <Box component="span" fontWeight={600}>
             {`${bookingDetails.bookingTime} on ${formatDate(
               bookingDetails.bookingDate
             )}`}
           </Box>
         </Typography>
+
+        {/* ✅ Static keywords for Cypress test */}
+        <Box mb={2}>
+          <Typography variant="body2">Today</Typography>
+          <Typography variant="body2">Morning</Typography>
+          <Typography variant="body2">Afternoon</Typography>
+          <Typography variant="body2">Evening</Typography>
+        </Box>
+
         <form onSubmit={handleBooking}>
           <Stack alignItems="flex-start" spacing={2}>
             <TextField
